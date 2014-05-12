@@ -1,0 +1,4 @@
+SummerSweeper
+=============
+
+Minesweeper in Java
