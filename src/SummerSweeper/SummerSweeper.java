@@ -12,6 +12,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 public class SummerSweeper extends JFrame implements ActionListener, MouseListener {
@@ -25,9 +26,20 @@ public class SummerSweeper extends JFrame implements ActionListener, MouseListen
 
 	public SummerSweeper() {
 		super();
-		
+
+		initBoard(this, Board.EASY);
+
+		try {
+			flagImage = ImageIO.read(new File("res/flag.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		flagImage = flagImage.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+		flagIcon = new ImageIcon(flagImage);
+	}
+
+	private void initBoard(JFrame frame, int difficulty) {
 		field = new Button[9][9];
-		System.out.println(field);
 		for (int x = 0; x < field.length; x++) {
 			for (int y = 0; y < field[x].length; y++) {
 				field[x][y] = new Button(x, y);
@@ -37,8 +49,8 @@ public class SummerSweeper extends JFrame implements ActionListener, MouseListen
 			}
 		}
 
-		board = new Board(this, field);
-		board.setDifficulty(Board.EASY);
+		board = new Board(frame, field);
+		board.setDifficulty(difficulty);
 		board.addMines(field);
 		board.getContainer().setBackground(Color.WHITE);
 
@@ -48,14 +60,6 @@ public class SummerSweeper extends JFrame implements ActionListener, MouseListen
 					field[i][j].setType(field[i][j].getMinesAround(field));
 			}
 		}
-
-		try {
-			flagImage = ImageIO.read(new File("res/flag.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		flagImage = flagImage.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-		flagIcon = new ImageIcon(flagImage);
 	}
 
 	public static void main(String[] args) {
@@ -72,7 +76,29 @@ public class SummerSweeper extends JFrame implements ActionListener, MouseListen
 		if (e.getSource() instanceof Button) {
 			Button source = (Button) e.getSource();
 			source.onLeftClick(board, field);
+			if (getWin()) {
+				if (JOptionPane.showConfirmDialog(new JOptionPane("You won!"), "You won! Restart?") == JOptionPane.YES_OPTION) {
+					restart();
+				} else {
+					System.exit(0);
+				}
+			}
 		}
+	}
+
+	private void restart() {
+		frame.remove(board.getContainer());
+		initBoard(frame, Board.EASY);
+	}
+
+	private boolean getWin() {
+		for (int x = 0; x < field.length; x++) {
+			for (int y = 0; y < field[x].length; y++) {
+				if (!field[x][y].isOpen() && field[x][y].getType() != Button.TYPE_MINE)
+					return false;
+			}
+		}
+		return true;
 	}
 
 	@Override
@@ -82,24 +108,24 @@ public class SummerSweeper extends JFrame implements ActionListener, MouseListen
 			source.onRightClick(flagIcon);
 		}
 	}
-	
+
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		
+
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		
+
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		
+
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		
+
 	}
 }

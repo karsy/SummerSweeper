@@ -12,12 +12,13 @@ public class Board {
 	public static final int EASY = 0, MEDIUM = 1, HARD = 2, CUSTOM = 3;
 
 	private static GridLayout containerLayout;
-	private JPanel container = new JPanel();
+	private JPanel container;
 	private static Random random = new Random();
 
 	private int difficulty;
 
 	public Board(JFrame frame, Button[][] field) {
+		container = new JPanel();
 		containerLayout = new GridLayout(field.length, field[0].length);
 		container.setBounds(0, 0, Button.SIZE * field[0].length, Button.SIZE * field.length);
 		container.setMaximumSize(new Dimension(Button.SIZE * field.length, Button.SIZE * field[0].length));
@@ -52,6 +53,8 @@ public class Board {
 		else if (difficulty == HARD)
 			mines = 99;
 
+		mines = 1;
+		
 		while (placedMines < mines) {
 			int x = random.nextInt(field.length);
 			int y = random.nextInt(field[0].length);
