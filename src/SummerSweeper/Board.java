@@ -1,11 +1,11 @@
 package SummerSweeper;
 
-import java.awt.Dimension;
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.Random;
 
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class Board {
@@ -17,23 +17,21 @@ public class Board {
 
 	private int difficulty;
 
-	public Board(JFrame frame, Button[][] field) {
-		container = new JPanel();
+	public Board(JPanel parent, Button[][] field) {
 		containerLayout = new GridLayout(field.length, field[0].length);
-		container.setBounds(0, 0, Button.SIZE * field[0].length, Button.SIZE * field.length);
-		container.setMaximumSize(new Dimension(Button.SIZE * field.length, Button.SIZE * field[0].length));
+		container = new JPanel();
 		container.setLayout(containerLayout);
 		containerLayout.preferredLayoutSize(container);
 
-		for (int i = 0; i < field.length; i++) {
-			for (int j = 0; j < field[i].length; j++) {
-				container.add(field[i][j]);
+		for (int y = 0; y < field.length; y++) {
+			for (int x = 0; x < field[y].length; x++) {
+				container.add(field[y][x]);
 			}
 		}
 
+		container.setBackground(Color.WHITE);
 		container.setVisible(true);
-		frame.add(container);
-		frame.pack();
+		parent.add(container, BorderLayout.CENTER);
 	}
 
 	public void setDifficulty(int difficulty) {
@@ -53,13 +51,11 @@ public class Board {
 		else if (difficulty == HARD)
 			mines = 99;
 
-		mines = 1;
-		
 		while (placedMines < mines) {
-			int x = random.nextInt(field.length);
-			int y = random.nextInt(field[0].length);
-			if (field[x][y].getType() != Button.TYPE_MINE) {
-				field[x][y].setType(Button.TYPE_MINE);
+			int x = random.nextInt(field[0].length);
+			int y = random.nextInt(field.length);
+			if (field[y][x].getType() != Button.TYPE_MINE) {
+				field[y][x].setType(Button.TYPE_MINE);
 				placedMines++;
 			}
 		}
@@ -78,7 +74,7 @@ public class Board {
 		while (stack.size() > 0) {
 			neighbours = currentButton.getNeightbours(field);
 			for (int i = 0; i < neighbours.size(); i++) {
-				if (neighbours.get(i).isOpen())
+				if (neighbours.get(i).isOpen() || neighbours.get(i).isFlagged())
 					continue;
 				neighbours.get(i).setOpen(true);
 				if (neighbours.get(i).getType() == Button.TYPE_EMPTY)

@@ -1,6 +1,5 @@
 package SummerSweeper;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.util.ArrayList;
@@ -20,7 +19,8 @@ public class Button extends JButton {
 	public Button(int x, int y) {
 		super();
 
-		this.setMinimumSize(new Dimension(SIZE, SIZE));
+		this.setPreferredSize(new Dimension(SIZE, SIZE));
+		this.setMinimumSize(new Dimension(40, 40));
 		this.position = new Point(x, y);
 		this.open = false;
 		this.flagged = false;
@@ -34,7 +34,7 @@ public class Button extends JButton {
 				if (i == 0 && j == 0)
 					continue;
 				try {
-					neighbours.add(field[this.position.x + i][this.position.y + j]);
+					neighbours.add(field[this.position.y + i][this.position.x + j]);
 				} catch (ArrayIndexOutOfBoundsException e) {
 					continue;
 				}
@@ -46,9 +46,6 @@ public class Button extends JButton {
 	public void onLeftClick(Board board, Button[][] field) {
 		if (!this.flagged)
 			this.setOpen(true);
-		if (this.type != TYPE_MINE) {
-			this.setBackground(Color.WHITE);
-		}
 		if (this.type == TYPE_EMPTY)
 			board.revealTilesAround(this, field);
 	}
@@ -56,7 +53,7 @@ public class Button extends JButton {
 	public void onRightClick(ImageIcon flag) {
 		if (!this.open && !this.flagged) {
 			this.setFlagged(true, flag);
-		} else if (this.flagged){
+		} else if (this.flagged) {
 			this.setFlagged(false, flag);
 			this.setText("");
 		}
@@ -78,10 +75,6 @@ public class Button extends JButton {
 
 	public int getType() {
 		return type;
-	}
-
-	public Point getPosition() {
-		return position;
 	}
 
 	public void setText(String text) {
