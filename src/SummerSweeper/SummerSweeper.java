@@ -1,9 +1,7 @@
 package SummerSweeper;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -14,28 +12,27 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
-public class SummerSweeper extends JFrame implements ActionListener, MouseListener{
+public class SummerSweeper extends JFrame implements ActionListener, MouseListener {
 	private static final long serialVersionUID = 1L;
-	//private static final int screenW = Toolkit.getDefaultToolkit().getScreenSize().width;
-	private static final int screenH = Toolkit.getDefaultToolkit().getScreenSize().height;
-	
+
 	private static SummerSweeper frame;
 	private static Image flagImage;
 	private static ImageIcon flagIcon;
-	private static Dimension screen, oldScreen;
-	private Button[][] field;
-	private Board board;
+	private static Button[][] field;
+	private static Board board;
 
 	public SummerSweeper() {
 		super();
-		this.addMouseListener(this);
 		
-		field = new Button[10][10];
-		for (int i = 0; i < field.length; i++) {
-			for (int j = 0; j < field[i].length; j++) {
-				field[i][j] = new Button(i, j);
-				field[i][j].addActionListener(this);
+		field = new Button[9][9];
+		System.out.println(field);
+		for (int x = 0; x < field.length; x++) {
+			for (int y = 0; y < field[x].length; y++) {
+				field[x][y] = new Button(x, y);
+				field[x][y].addActionListener(this);
+				field[x][y].addMouseListener(this);
 			}
 		}
 
@@ -43,8 +40,7 @@ public class SummerSweeper extends JFrame implements ActionListener, MouseListen
 		board.setDifficulty(Board.EASY);
 		board.addMines(field);
 		board.getContainer().setBackground(Color.WHITE);
-		
-		
+
 		for (int i = 0; i < field.length; i++) {
 			for (int j = 0; j < field[i].length; j++) {
 				if (field[i][j].getType() != Button.TYPE_MINE)
@@ -57,50 +53,43 @@ public class SummerSweeper extends JFrame implements ActionListener, MouseListen
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		flagImage = flagImage.getScaledInstance(40, 40, Image.SCALE_SMOOTH);
-		field[0][0].setIcon(new ImageIcon(flagImage));
+		flagImage = flagImage.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+		flagIcon = new ImageIcon(flagImage);
 	}
 
 	public static void main(String[] args) {
 		frame = new SummerSweeper();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setTitle("SummerSweeper");
-		frame.setBounds(0, 0, screenH / 2, screenH / 2);
+		frame.setBounds(0, 0, field[0].length * Button.SIZE, field.length * Button.SIZE);
+		frame.setResizable(false);
 		frame.setVisible(true);
-		
-		screen = frame.getSize();
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() instanceof Button) {
 			Button source = (Button) e.getSource();
-			System.out.println(source.getWidth() + ", " + source.getHeight());
-			if (source.getType() != Button.TYPE_MINE) {
-				source.setText(String.valueOf(source.getType()));
-				source.setBackground(Color.WHITE);
-			}
-			if (source.getType() == Button.TYPE_EMPTY)
-				source.setVisible(false);
+			source.onLeftClick(board, field);
 		}
 	}
 
+	@Override
+	public void mousePressed(MouseEvent e) {
+		if (SwingUtilities.isRightMouseButton(e)) {
+			Button source = (Button) e.getSource();
+			source.onRightClick(flagIcon);
+		}
+	}
+	
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		
 	}
 
 	@Override
-	public void mousePressed(MouseEvent e) {
-		oldScreen = frame.getSize();
-	}
-
-	@Override
 	public void mouseReleased(MouseEvent e) {
-		screen = frame.getSize();
-		if (screen != oldScreen) {
-			System.out.println("Resize");
-		}
+		
 	}
 
 	@Override
@@ -112,5 +101,4 @@ public class SummerSweeper extends JFrame implements ActionListener, MouseListen
 	public void mouseExited(MouseEvent e) {
 		
 	}
-
 }
