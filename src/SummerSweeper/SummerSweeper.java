@@ -33,6 +33,7 @@ public class SummerSweeper extends JFrame implements ActionListener, MouseListen
 				field[x][y] = new Button(x, y);
 				field[x][y].addActionListener(this);
 				field[x][y].addMouseListener(this);
+				field[x][y].setFocusable(false);
 			}
 		}
 
@@ -49,7 +50,7 @@ public class SummerSweeper extends JFrame implements ActionListener, MouseListen
 		}
 
 		try {
-			flagImage = ImageIO.read(new File("res/ww.png"));
+			flagImage = ImageIO.read(new File("res/flag.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
