@@ -2,7 +2,6 @@ package SummerSweeper;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.Random;
@@ -12,6 +11,7 @@ import javax.swing.JPanel;
 public class Board {
 	public static final int EASY = 0, MEDIUM = 1, HARD = 2, CUSTOM = 3;
 
+	private static int mines = 10;
 	private static GridLayout containerLayout;
 	private JPanel container;
 	private static Random random = new Random();
@@ -22,8 +22,6 @@ public class Board {
 		containerLayout = new GridLayout(field.length, field[0].length);
 		container = new JPanel();
 		container.setLayout(containerLayout);
-		container.setPreferredSize(new Dimension(field[0].length * 50, field.length * 50));
-		container.setMinimumSize(new Dimension(field[0].length * 40, field.length * 40));
 		containerLayout.preferredLayoutSize(container);
 
 		for (int y = 0; y < field.length; y++) {
@@ -46,7 +44,7 @@ public class Board {
 	}
 
 	public void addMines(Button[][] field) {
-		int mines = 0, placedMines = 0;
+		int placedMines = 0;
 		if (difficulty == EASY)
 			mines = 10;
 		else if (difficulty == MEDIUM)

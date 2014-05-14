@@ -1,6 +1,5 @@
 package SummerSweeper;
 
-import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.Point;
 import java.util.ArrayList;
@@ -20,9 +19,7 @@ public class Button extends JButton {
 	public Button(int x, int y) {
 		super();
 
-		this.setPreferredSize(new Dimension(SIZE, SIZE));
-		this.setMinimumSize(new Dimension(SIZE, SIZE));
-		this.setMargin(new Insets(0, 0, 0, 0));
+		this.setMargin(new Insets(-10, -10, -10, -10));
 		this.position = new Point(x, y);
 		this.open = false;
 		this.flagged = false;

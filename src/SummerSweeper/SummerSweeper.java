@@ -83,7 +83,6 @@ public class SummerSweeper extends JFrame implements ActionListener, MouseListen
 			for (int x = 0; x < field[y].length; x++) {
 				if (field[y][x].getType() != Button.TYPE_MINE) {
 					field[y][x].setType(field[y][x].getMinesAround(field));
-					field[y][x].setText(String.valueOf(field[y][x].getType()));
 				}
 			}
 		}
@@ -94,7 +93,7 @@ public class SummerSweeper extends JFrame implements ActionListener, MouseListen
 	public static void main(String[] args) {
 		frame = new SummerSweeper("SummerSweeper");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setPreferredSize((new Dimension(field[0].length * 50, field.length * 50 + infoPanel.getHeight())));
+		frame.setPreferredSize(new Dimension(field[0].length * 50, field.length * 50 + infoPanel.getHeight()));
 		frame.setMinimumSize(new Dimension(field[0].length * 40, field.length * 40 + infoPanel.getHeight()));
 		frame.setVisible(true);
 		frame.pack();
@@ -143,7 +142,7 @@ public class SummerSweeper extends JFrame implements ActionListener, MouseListen
 		container.remove(board.getContainer());
 		initBoard(Board.HARD);
 		infoPanel.getTimer().setText("Time: 0s");
-		frame.setPreferredSize((new Dimension(field[0].length * 50, field.length * 50 + infoPanel.getHeight())));
+		frame.setPreferredSize(new Dimension(field[0].length * 50, field.length * 50 + infoPanel.getHeight()));
 		frame.setMinimumSize(new Dimension(field[0].length * 40, field.length * 40 + infoPanel.getHeight()));
 		frame.pack();
 	}
