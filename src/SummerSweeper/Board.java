@@ -2,6 +2,7 @@ package SummerSweeper;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.Random;
@@ -21,6 +22,8 @@ public class Board {
 		containerLayout = new GridLayout(field.length, field[0].length);
 		container = new JPanel();
 		container.setLayout(containerLayout);
+		container.setPreferredSize(new Dimension(field[0].length * 50, field.length * 50));
+		container.setMinimumSize(new Dimension(field[0].length * 40, field.length * 40));
 		containerLayout.preferredLayoutSize(container);
 
 		for (int y = 0; y < field.length; y++) {

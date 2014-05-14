@@ -1,5 +1,6 @@
 package SummerSweeper;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -24,6 +25,7 @@ public class InfoPanel extends JPanel implements ActionListener {
 
 		timer = new Timer();
 		timer.setFocusable(false);
+		timer.setPreferredSize(new Dimension(75, 17));
 		timer.setText("Time: 0s");
 		this.add(timer);
 
@@ -36,5 +38,9 @@ public class InfoPanel extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
+	}
+
+	public Timer getTimer() {
+		return timer;
 	}
 }

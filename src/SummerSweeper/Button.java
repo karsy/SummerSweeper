@@ -1,6 +1,7 @@
 package SummerSweeper;
 
 import java.awt.Dimension;
+import java.awt.Insets;
 import java.awt.Point;
 import java.util.ArrayList;
 
@@ -20,7 +21,8 @@ public class Button extends JButton {
 		super();
 
 		this.setPreferredSize(new Dimension(SIZE, SIZE));
-		this.setMinimumSize(new Dimension(40, 40));
+		this.setMinimumSize(new Dimension(SIZE, SIZE));
+		this.setMargin(new Insets(0, 0, 0, 0));
 		this.position = new Point(x, y);
 		this.open = false;
 		this.flagged = false;
@@ -88,9 +90,11 @@ public class Button extends JButton {
 	}
 
 	public void setOpen(boolean open) {
-		if (open && this.type != TYPE_EMPTY)
+		if (open && this.type != TYPE_EMPTY) {
+			this.setContentAreaFilled(false);
+			this.setBorderPainted(false);
 			this.setText(this.type != TYPE_MINE ? String.valueOf(this.type) : "X");
-		else if (open && this.type == TYPE_EMPTY)
+		} else if (open && this.type == TYPE_EMPTY)
 			this.setVisible(false);
 		this.open = open;
 	}
