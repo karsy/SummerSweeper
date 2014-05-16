@@ -13,9 +13,9 @@ public class Board {
 
 	private static int mines = 10;
 	private static GridLayout containerLayout;
-	private JPanel container;
 	private static Random random = new Random();
 
+	private JPanel container;
 	private int difficulty;
 
 	public Board(JPanel parent, Button[][] field) {
@@ -80,8 +80,24 @@ public class Board {
 				neighbours.get(i).setOpen(true);
 				if (neighbours.get(i).getType() == Button.TYPE_EMPTY)
 					stack.add(neighbours.get(i));
+				if (neighbours.get(i).getType() == Button.TYPE_MINE)
+					SummerSweeper.lost();
 			}
 			currentButton = stack.remove(stack.size() - 1);
 		}
+	}
+
+	public void decreaseMines(InfoPanel infoPanel) {
+		mines--;
+		infoPanel.getMinesPane().setText("Mines: " + mines);
+	}
+
+	public void increaseMines(InfoPanel infoPanel) {
+		mines++;
+		infoPanel.getMinesPane().setText("Mines: " + mines);
+	}
+
+	public int getMinesLeft() {
+		return mines;
 	}
 }

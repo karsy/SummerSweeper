@@ -49,12 +49,16 @@ public class Button extends JButton {
 			board.revealTilesAround(this, field);
 	}
 
-	public void onRightClick(ImageIcon flag) {
-		if (!this.open && !this.flagged) {
+	public void onRightClick(ImageIcon flag, Board board, InfoPanel infoPanel, Button[][] field) {
+		if (!this.open && !this.flagged && board.getMinesLeft() != 0) {
 			this.setFlagged(true, flag);
+			board.decreaseMines(infoPanel);
 		} else if (this.flagged) {
 			this.setFlagged(false, flag);
 			this.setText("");
+			board.increaseMines(infoPanel);
+		} else if (this.open) {
+			board.revealTilesAround(this, field);
 		}
 	}
 

@@ -22,7 +22,7 @@ public class SummerSweeper extends JFrame implements ActionListener, MouseListen
 	private static final long serialVersionUID = 1L;
 	public static final int PLAYING = 0, PAUSED = 1, READY = 2;
 
-	private static SummerSweeper frame;
+	private static SummerSweeper game;
 	private static JPanel container;
 	private static BorderLayout containerLayout = new BorderLayout();
 	private static InfoPanel infoPanel;
@@ -41,7 +41,7 @@ public class SummerSweeper extends JFrame implements ActionListener, MouseListen
 		container.setVisible(true);
 		this.add(container);
 
-		infoPanel = new InfoPanel();
+		infoPanel = new InfoPanel(this);
 		infoPanel.setBounds(0, 0, this.getWidth(), 50);
 		infoPanel.setVisible(true);
 		infoPanel.setBackground(Color.WHITE);
@@ -58,27 +58,22 @@ public class SummerSweeper extends JFrame implements ActionListener, MouseListen
 		flagIcon = new ImageIcon(flagImage);
 	}
 
-	private void initBoard(int difficulty) {
-		if (difficulty == Board.EASY)
-			field = new Button[9][9];
-		else if (difficulty == Board.MEDIUM)
-			field = new Button[16][16];
-		else if (difficulty == Board.HARD)
-			field = new Button[16][30];
-
+	private static void initBoard(int width, int height, int mines, int difficulty) {
+		field = new Button[height][width];
+		
 		for (int y = 0; y < field.length; y++) {
 			for (int x = 0; x < field[y].length; x++) {
 				field[y][x] = new Button(x, y);
-				field[y][x].addActionListener(this);
-				field[y][x].addMouseListener(this);
+				field[y][x].addActionListener(game);
+				field[y][x].addMouseListener(game);
 				field[y][x].setFocusable(false);
 			}
 		}
-
+		
 		board = new Board(container, field);
 		board.setDifficulty(difficulty);
 		board.addMines(field);
-
+		
 		for (int y = 0; y < field.length; y++) {
 			for (int x = 0; x < field[y].length; x++) {
 				if (field[y][x].getType() != Button.TYPE_MINE) {
@@ -87,16 +82,27 @@ public class SummerSweeper extends JFrame implements ActionListener, MouseListen
 			}
 		}
 
+		infoPanel.getMinesPane().setText("Mines: " + board.getMinesLeft());
 		gameState = READY;
+
+	}
+	
+	private static void initBoard(int difficulty) {
+		if (difficulty == Board.EASY)
+			initBoard(9, 9, 10, difficulty);
+		else if (difficulty == Board.MEDIUM)
+			initBoard(16, 16, 40, difficulty);
+		else if (difficulty == Board.HARD)
+			initBoard(30, 16, 99, difficulty);
 	}
 
 	public static void main(String[] args) {
-		frame = new SummerSweeper("SummerSweeper");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setPreferredSize(new Dimension(field[0].length * 50, field.length * 50 + infoPanel.getHeight()));
-		frame.setMinimumSize(new Dimension(field[0].length * 40, field.length * 40 + infoPanel.getHeight()));
-		frame.setVisible(true);
-		frame.pack();
+		game = new SummerSweeper("SummerSweeper");
+		game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		game.setPreferredSize(new Dimension(field[0].length * 50, field.length * 50 + infoPanel.getHeight()));
+		game.setMinimumSize(new Dimension(field[0].length * 40, field.length * 40 + infoPanel.getHeight()));
+		game.setVisible(true);
+		game.pack();
 	}
 
 	@Override
@@ -128,23 +134,27 @@ public class SummerSweeper extends JFrame implements ActionListener, MouseListen
 		}
 	}
 
-	private void lost() {
+	public static void lost() {
 		gameState = PAUSED;
 		if (JOptionPane.showConfirmDialog(new JOptionPane("You lost!"), "You lost! Restart?") == JOptionPane.YES_OPTION) {
-			restart();
+			game.restart();
 		} else {
 			System.exit(0);
 		}
 	}
 
+	public static void reshapeBoard(int width, int height, int mines) {
+		
+	}
+	
 	private void restart() {
 		board.getContainer().removeAll();
 		container.remove(board.getContainer());
-		initBoard(Board.HARD);
+		initBoard(board.getDifficulty());
 		infoPanel.getTimer().setText("Time: 0s");
-		frame.setPreferredSize(new Dimension(field[0].length * 50, field.length * 50 + infoPanel.getHeight()));
-		frame.setMinimumSize(new Dimension(field[0].length * 40, field.length * 40 + infoPanel.getHeight()));
-		frame.pack();
+		game.setPreferredSize(new Dimension(field[0].length * 50, field.length * 50 + infoPanel.getHeight()));
+		game.setMinimumSize(new Dimension(field[0].length * 40, field.length * 40 + infoPanel.getHeight()));
+		game.pack();
 	}
 
 	private boolean getWin() {
@@ -157,6 +167,13 @@ public class SummerSweeper extends JFrame implements ActionListener, MouseListen
 		return true;
 	}
 
+	public Button[][] getField() {
+		return field;
+	}
+	public Board getBoard() {
+		return board;
+	}
+	
 	public static int getGameState() {
 		return gameState;
 	}
@@ -165,7 +182,7 @@ public class SummerSweeper extends JFrame implements ActionListener, MouseListen
 	public void mousePressed(MouseEvent e) {
 		if (SwingUtilities.isRightMouseButton(e)) {
 			Button source = (Button) e.getSource();
-			source.onRightClick(flagIcon);
+			source.onRightClick(flagIcon, board, infoPanel, field);
 		}
 	}
 

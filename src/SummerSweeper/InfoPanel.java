@@ -14,10 +14,16 @@ public class InfoPanel extends JPanel implements ActionListener {
 	private static Timer timer;
 	private static JButton optionButton;
 	private static JTextPane mines;
+	private static Options options;
+	
+	private static SummerSweeper game;
 
-	public InfoPanel() {
+	public InfoPanel(SummerSweeper sweeper) {
 		super();
 
+		// Save reference to main class
+		game = sweeper;
+		
 		optionButton = new JButton("Options");
 		optionButton.setFocusable(false);
 		optionButton.addActionListener(this);
@@ -33,14 +39,20 @@ public class InfoPanel extends JPanel implements ActionListener {
 		mines.setFocusable(false);
 		mines.setText("Mines: 10");
 		this.add(mines);
+		
+		options = new Options(sweeper);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-
+		options.setVisible(true, game.getField(), game.getBoard());
 	}
 
 	public Timer getTimer() {
 		return timer;
+	}
+	
+	public JTextPane getMinesPane() {
+		return mines;
 	}
 }
