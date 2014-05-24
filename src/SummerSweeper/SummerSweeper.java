@@ -58,21 +58,21 @@ public class SummerSweeper extends JFrame implements ActionListener, MouseListen
 		flagIcon = new ImageIcon(flagImage);
 	}
 
-	private static void initBoard(int width, int height, int mines, int difficulty) {
+	private void initBoard(int width, int height, int mines, int difficulty) {
 		field = new Button[height][width];
 		
 		for (int y = 0; y < field.length; y++) {
 			for (int x = 0; x < field[y].length; x++) {
 				field[y][x] = new Button(x, y);
-				field[y][x].addActionListener(game);
-				field[y][x].addMouseListener(game);
+				field[y][x].addActionListener(this);
+				field[y][x].addMouseListener(this);
 				field[y][x].setFocusable(false);
 			}
 		}
 		
 		board = new Board(container, field);
 		board.setDifficulty(difficulty);
-		board.addMines(field);
+		board.addMines(field, mines);
 		
 		for (int y = 0; y < field.length; y++) {
 			for (int x = 0; x < field[y].length; x++) {
@@ -87,13 +87,15 @@ public class SummerSweeper extends JFrame implements ActionListener, MouseListen
 
 	}
 	
-	private static void initBoard(int difficulty) {
+	private void initBoard(int difficulty) {
 		if (difficulty == Board.EASY)
 			initBoard(9, 9, 10, difficulty);
 		else if (difficulty == Board.MEDIUM)
 			initBoard(16, 16, 40, difficulty);
 		else if (difficulty == Board.HARD)
 			initBoard(30, 16, 99, difficulty);
+		else if (difficulty == Board.CUSTOM)
+			initBoard(field[0].length, field.length, board.getMaxAmoutOfMines(), difficulty);
 	}
 
 	public static void main(String[] args) {
@@ -112,8 +114,10 @@ public class SummerSweeper extends JFrame implements ActionListener, MouseListen
 				gameState = PLAYING;
 				new Thread(infoPanel.getTimer()).start();
 			}
+			
 			Button source = (Button) e.getSource();
 			source.onLeftClick(board, field);
+			
 			if (source.getType() == Button.TYPE_MINE) {
 				lost();
 			} else if (getWin()) {
@@ -125,8 +129,9 @@ public class SummerSweeper extends JFrame implements ActionListener, MouseListen
 						}
 					}
 				}
+				infoPanel.getMinesPane().setText("Mines: 0");
 				if (JOptionPane.showConfirmDialog(new JOptionPane("You won!"), "You won! Restart?") == JOptionPane.YES_OPTION) {
-					restart();
+					restart(board.getSize().width, board.getSize().height, board.getMaxAmoutOfMines(), board.getDifficulty());
 				} else {
 					System.exit(0);
 				}
@@ -137,20 +142,20 @@ public class SummerSweeper extends JFrame implements ActionListener, MouseListen
 	public static void lost() {
 		gameState = PAUSED;
 		if (JOptionPane.showConfirmDialog(new JOptionPane("You lost!"), "You lost! Restart?") == JOptionPane.YES_OPTION) {
-			game.restart();
+			game.restart(board.getSize().width, board.getSize().height, board.getMaxAmoutOfMines(), board.getDifficulty());
 		} else {
 			System.exit(0);
 		}
 	}
 
 	public static void reshapeBoard(int width, int height, int mines) {
-		
+		game.restart(width, height, mines, Board.CUSTOM);
 	}
 	
-	private void restart() {
+	private void restart(int width, int height, int mines, int difficulty) {
 		board.getContainer().removeAll();
 		container.remove(board.getContainer());
-		initBoard(board.getDifficulty());
+		initBoard(width, height, mines, difficulty);
 		infoPanel.getTimer().setText("Time: 0s");
 		game.setPreferredSize(new Dimension(field[0].length * 50, field.length * 50 + infoPanel.getHeight()));
 		game.setMinimumSize(new Dimension(field[0].length * 40, field.length * 40 + infoPanel.getHeight()));
@@ -183,6 +188,22 @@ public class SummerSweeper extends JFrame implements ActionListener, MouseListen
 		if (SwingUtilities.isRightMouseButton(e)) {
 			Button source = (Button) e.getSource();
 			source.onRightClick(flagIcon, board, infoPanel, field);
+			if (getWin()) {
+				gameState = PAUSED;
+				for (int y = 0; y < field.length; y++) {
+					for (int x = 0; x < field[y].length; x++) {
+						if (field[y][x].getType() == Button.TYPE_MINE) {
+							field[y][x].setIcon(flagIcon);
+						}
+					}
+				}
+				infoPanel.getMinesPane().setText("Mines: 0");
+				if (JOptionPane.showConfirmDialog(new JOptionPane("You won!"), "You won! Restart?") == JOptionPane.YES_OPTION) {
+					restart(board.getSize().width, board.getSize().height, board.getMaxAmoutOfMines(), board.getDifficulty());
+				} else {
+					System.exit(0);
+				}
+			}
 		}
 	}
 

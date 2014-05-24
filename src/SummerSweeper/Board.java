@@ -2,6 +2,7 @@ package SummerSweeper;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.Random;
@@ -11,14 +12,17 @@ import javax.swing.JPanel;
 public class Board {
 	public static final int EASY = 0, MEDIUM = 1, HARD = 2, CUSTOM = 3;
 
-	private static int mines = 10;
+	private static int mines = 10, maxMines = 10;
 	private static GridLayout containerLayout;
 	private static Random random = new Random();
-
+	
+	private Dimension size;
 	private JPanel container;
 	private int difficulty;
 
 	public Board(JPanel parent, Button[][] field) {
+		size = new Dimension(field[0].length, field.length);
+		
 		containerLayout = new GridLayout(field.length, field[0].length);
 		container = new JPanel();
 		container.setLayout(containerLayout);
@@ -43,16 +47,17 @@ public class Board {
 		return difficulty;
 	}
 
-	public void addMines(Button[][] field) {
+	public void addMines(Button[][] field, int amountToAdd) {
 		int placedMines = 0;
-		if (difficulty == EASY)
-			mines = 10;
-		else if (difficulty == MEDIUM)
-			mines = 40;
-		else if (difficulty == HARD)
-			mines = 99;
-
-		while (placedMines < mines) {
+		
+		if (field.length * field[0].length < amountToAdd) {
+			amountToAdd = field.length * field[0].length - 1;
+		}
+		
+		mines = amountToAdd;
+		maxMines = amountToAdd;
+		
+		while (placedMines < amountToAdd) {
 			int x = random.nextInt(field[0].length);
 			int y = random.nextInt(field.length);
 			if (field[y][x].getType() != Button.TYPE_MINE) {
@@ -73,7 +78,7 @@ public class Board {
 		stack.add(currentButton);
 
 		while (stack.size() > 0) {
-			neighbours = currentButton.getNeightbours(field);
+			neighbours = currentButton.getNeighbours(field);
 			for (int i = 0; i < neighbours.size(); i++) {
 				if (neighbours.get(i).isOpen() || neighbours.get(i).isFlagged())
 					continue;
@@ -99,5 +104,13 @@ public class Board {
 
 	public int getMinesLeft() {
 		return mines;
+	}
+	
+	public int getMaxAmoutOfMines() {
+		return maxMines;
+	}
+	
+	public Dimension getSize() {
+		return size;
 	}
 }

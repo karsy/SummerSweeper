@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -14,7 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-public class Options extends JFrame implements ActionListener {
+public class Options extends JFrame implements ActionListener, KeyListener {
 	private static final long serialVersionUID = 1L;
 	private static final Dimension cellDimension = new Dimension(100, 30);
 	private static final String[] difficulties = { "Easy", "Medium", "Hard", "Custom" };
@@ -61,6 +63,7 @@ public class Options extends JFrame implements ActionListener {
 		xSize = new JTextField();
 		xSize.setPreferredSize(cellDimension);
 		xSize.setMinimumSize(cellDimension);
+		xSize.addKeyListener(this);
 		xSize.setVisible(true);
 		container.add(xSize);
 
@@ -74,6 +77,7 @@ public class Options extends JFrame implements ActionListener {
 		ySize = new JTextField();
 		ySize.setPreferredSize(cellDimension);
 		ySize.setMinimumSize(cellDimension);
+		ySize.addKeyListener(this);
 		ySize.setVisible(true);
 		container.add(ySize);
 
@@ -87,6 +91,7 @@ public class Options extends JFrame implements ActionListener {
 		mineField = new JTextField();
 		mineField.setPreferredSize(cellDimension);
 		mineField.setMinimumSize(cellDimension);
+		mineField.addKeyListener(this);
 		mineField.setVisible(true);
 		container.add(mineField);
 
@@ -116,7 +121,7 @@ public class Options extends JFrame implements ActionListener {
 		y = y > 20 ? 20 : y;
 		mines = mines < 0 ? 1 : mines;
 		mines = mines > 99 ? 99 : mines;
-
+		
 		SummerSweeper.reshapeBoard(x, y, mines);
 		this.setVisible(false);
 	}
@@ -131,13 +136,39 @@ public class Options extends JFrame implements ActionListener {
 		super.setVisible(visible);
 	}
 
+	@Override
+	public void keyPressed(KeyEvent e) {
+		difficulty.setSelectedIndex(3);
+	}
+	
+	@Override
+	public void keyTyped(KeyEvent e) {
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+	}
+	
 	// For the difficulty dropdown
 	private class ChangeDiff implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-
+			String choice = difficulty.getItemAt(difficulty.getSelectedIndex());
+			
+			if (choice == "Easy") {
+				xSize.setText("9");
+				ySize.setText("9");
+				mineField.setText("10");
+			} else if (choice == "Medium") {
+				xSize.setText("16");
+				ySize.setText("16");
+				mineField.setText("40");
+			} else if (choice == "Hard") {
+				xSize.setText("30");
+				ySize.setText("16");
+				mineField.setText("99");
+			}
 		}
-
 	}
 }

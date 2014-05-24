@@ -26,7 +26,7 @@ public class Button extends JButton {
 		this.setVisible(true);
 	}
 
-	public ArrayList<Button> getNeightbours(Button[][] field) {
+	public ArrayList<Button> getNeighbours(Button[][] field) {
 		ArrayList<Button> neighbours = new ArrayList<Button>();
 		for (int i = -1; i <= 1; i++) {
 			for (int j = -1; j <= 1; j++) {
@@ -64,7 +64,7 @@ public class Button extends JButton {
 
 	public int getMinesAround(Button[][] field) {
 		int mines = 0;
-		ArrayList<Button> neighbours = this.getNeightbours(field);
+		ArrayList<Button> neighbours = this.getNeighbours(field);
 		for (int i = 0; i < neighbours.size(); i++) {
 			if (neighbours.get(i).getType() == TYPE_MINE)
 				mines++;

@@ -5,7 +5,7 @@ import javax.swing.JTextPane;
 public class Timer extends JTextPane implements Runnable {
 	private static final long serialVersionUID = 1L;
 
-	private static long startTime = 0, endTime = 0;
+	private static long startTime = 0;
 
 	public Timer() {
 		super();
@@ -23,9 +23,4 @@ public class Timer extends JTextPane implements Runnable {
 			}
 		}
 	}
-
-	public long getGameTimeMS() {
-		return endTime - startTime;
-	}
-
 }
