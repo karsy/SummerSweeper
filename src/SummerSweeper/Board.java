@@ -13,19 +13,17 @@ public class Board {
 	public static final int EASY = 0, MEDIUM = 1, HARD = 2, CUSTOM = 3;
 
 	private static int mines = 10, maxMines = 10;
-	private static GridLayout containerLayout;
 	private static Random random = new Random();
 	
 	private Dimension size;
-	private JPanel container;
+	private JPanel container = new JPanel();
 	private int difficulty;
 
 	public Board(JPanel parent, Button[][] field) {
 		size = new Dimension(field[0].length, field.length);
 		
-		containerLayout = new GridLayout(field.length, field[0].length);
-		container = new JPanel();
-		container.setLayout(containerLayout);
+		GridLayout containerLayout = new GridLayout(field.length, field[0].length);
+        container.setLayout(containerLayout);
 		containerLayout.preferredLayoutSize(container);
 
 		for (int y = 0; y < field.length; y++) {
@@ -74,18 +72,18 @@ public class Board {
 	public void revealTilesAround(Button source, Button[][] field) {
 		Button currentButton = source;
 		ArrayList<Button> stack = new ArrayList<Button>();
-		ArrayList<Button> neighbours = new ArrayList<Button>();
+		ArrayList<Button> neighbours;
 		stack.add(currentButton);
 
 		while (stack.size() > 0) {
 			neighbours = currentButton.getNeighbours(field);
-			for (int i = 0; i < neighbours.size(); i++) {
-				if (neighbours.get(i).isOpen() || neighbours.get(i).isFlagged())
+			for (Button button : neighbours) {
+				if (button.isOpen() || button.isFlagged())
 					continue;
-				neighbours.get(i).setOpen(true);
-				if (neighbours.get(i).getType() == Button.TYPE_EMPTY)
-					stack.add(neighbours.get(i));
-				if (neighbours.get(i).getType() == Button.TYPE_MINE)
+				button.setOpen(true);
+				if (button.getType() == Button.TYPE_EMPTY)
+					stack.add(button);
+				if (button.getType() == Button.TYPE_MINE)
 					SummerSweeper.lost();
 			}
 			currentButton = stack.remove(stack.size() - 1);
@@ -106,7 +104,7 @@ public class Board {
 		return mines;
 	}
 	
-	public int getMaxAmoutOfMines() {
+	public int getMaxAmountOfMines() {
 		return maxMines;
 	}
 	

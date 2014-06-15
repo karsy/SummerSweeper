@@ -113,7 +113,8 @@ public class Options extends JFrame implements ActionListener, KeyListener {
 			y = Integer.parseInt(ySize.getText());
 			mines = Integer.parseInt(mineField.getText());
 		} catch (NumberFormatException ex) {
-		}
+            System.out.println(ex.getMessage());
+        }
 
 		x = x < 1 ? 1 : x;
 		x = x > 30 ? 30 : x;
@@ -156,15 +157,15 @@ public class Options extends JFrame implements ActionListener, KeyListener {
 		public void actionPerformed(ActionEvent e) {
 			String choice = difficulty.getItemAt(difficulty.getSelectedIndex());
 			
-			if (choice == "Easy") {
+			if (choice.equals("Easy")) {
 				xSize.setText("9");
 				ySize.setText("9");
 				mineField.setText("10");
-			} else if (choice == "Medium") {
+			} else if (choice.equals("Medium")) {
 				xSize.setText("16");
 				ySize.setText("16");
 				mineField.setText("40");
-			} else if (choice == "Hard") {
+			} else if (choice.equals("Hard")) {
 				xSize.setText("30");
 				ySize.setText("16");
 				mineField.setText("99");

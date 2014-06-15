@@ -12,11 +12,7 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
 public class SummerSweeper extends JFrame implements ActionListener, MouseListener {
 	private static final long serialVersionUID = 1L;
@@ -95,12 +91,12 @@ public class SummerSweeper extends JFrame implements ActionListener, MouseListen
 		else if (difficulty == Board.HARD)
 			initBoard(30, 16, 99, difficulty);
 		else if (difficulty == Board.CUSTOM)
-			initBoard(field[0].length, field.length, board.getMaxAmoutOfMines(), difficulty);
+			initBoard(field[0].length, field.length, board.getMaxAmountOfMines(), difficulty);
 	}
 
 	public static void main(String[] args) {
 		game = new SummerSweeper("SummerSweeper");
-		game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		game.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		game.setPreferredSize(new Dimension(field[0].length * 50, field.length * 50 + infoPanel.getHeight()));
 		game.setMinimumSize(new Dimension(field[0].length * 40, field.length * 40 + infoPanel.getHeight()));
 		game.setVisible(true);
@@ -131,7 +127,7 @@ public class SummerSweeper extends JFrame implements ActionListener, MouseListen
 				}
 				infoPanel.getMinesPane().setText("Mines: 0");
 				if (JOptionPane.showConfirmDialog(new JOptionPane("You won!"), "You won! Restart?") == JOptionPane.YES_OPTION) {
-					restart(board.getSize().width, board.getSize().height, board.getMaxAmoutOfMines(), board.getDifficulty());
+					restart(board.getSize().width, board.getSize().height, board.getMaxAmountOfMines(), board.getDifficulty());
 				} else {
 					System.exit(0);
 				}
@@ -142,7 +138,7 @@ public class SummerSweeper extends JFrame implements ActionListener, MouseListen
 	public static void lost() {
 		gameState = PAUSED;
 		if (JOptionPane.showConfirmDialog(new JOptionPane("You lost!"), "You lost! Restart?") == JOptionPane.YES_OPTION) {
-			game.restart(board.getSize().width, board.getSize().height, board.getMaxAmoutOfMines(), board.getDifficulty());
+			game.restart(board.getSize().width, board.getSize().height, board.getMaxAmountOfMines(), board.getDifficulty());
 		} else {
 			System.exit(0);
 		}
@@ -199,7 +195,7 @@ public class SummerSweeper extends JFrame implements ActionListener, MouseListen
 				}
 				infoPanel.getMinesPane().setText("Mines: 0");
 				if (JOptionPane.showConfirmDialog(new JOptionPane("You won!"), "You won! Restart?") == JOptionPane.YES_OPTION) {
-					restart(board.getSize().width, board.getSize().height, board.getMaxAmoutOfMines(), board.getDifficulty());
+					restart(board.getSize().width, board.getSize().height, board.getMaxAmountOfMines(), board.getDifficulty());
 				} else {
 					System.exit(0);
 				}

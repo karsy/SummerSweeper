@@ -9,8 +9,7 @@ import javax.swing.JButton;
 
 public class Button extends JButton {
 	private static final long serialVersionUID = 1L;
-	public static final int SIZE = 50;
-	public static final int TYPE_EMPTY = 0, TYPE_ONE = 1, TYPE_TWO = 2, TYPE_THREE = 3, TYPE_FOUR = 4, TYPE_FIVE = 5, TYPE_SIX = 6, TYPE_SEVEN = 7, TYPE_EIGHT = 8, TYPE_MINE = 9;
+	public static final int TYPE_EMPTY = 0, TYPE_MINE = 9;
 
 	private int type;
 	private boolean open, flagged;
@@ -35,8 +34,8 @@ public class Button extends JButton {
 				try {
 					neighbours.add(field[this.position.y + i][this.position.x + j]);
 				} catch (ArrayIndexOutOfBoundsException e) {
-					continue;
-				}
+                    System.out.println(e.getMessage());
+                }
 			}
 		}
 		return neighbours;
@@ -65,8 +64,8 @@ public class Button extends JButton {
 	public int getMinesAround(Button[][] field) {
 		int mines = 0;
 		ArrayList<Button> neighbours = this.getNeighbours(field);
-		for (int i = 0; i < neighbours.size(); i++) {
-			if (neighbours.get(i).getType() == TYPE_MINE)
+		for (Button neighbour : neighbours) {
+			if (neighbour.getType() == TYPE_MINE)
 				mines++;
 		}
 		return mines;
@@ -95,7 +94,7 @@ public class Button extends JButton {
 			this.setContentAreaFilled(false);
 			this.setBorderPainted(false);
 			this.setText(this.type != TYPE_MINE ? String.valueOf(this.type) : "X");
-		} else if (open && this.type == TYPE_EMPTY)
+		} else if (open)
 			this.setVisible(false);
 		this.open = open;
 	}
